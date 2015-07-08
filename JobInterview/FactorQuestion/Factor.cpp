@@ -13,19 +13,19 @@ list<ULL> Factor::CreateFactors(ULL maxValue)
     return foundFactors;
 }
 
-// Recursivley look for all the factors of 2,3,5 up to a given max value
+// Recursively look for all the factors of 2,3,5 up to a given max value
 // Note:
 //      When the previous call was a 2 factor we want to call 2,3,5 in this call
 //      When the previous call was a 3 factor we want to call 3,5 in this call
 //      When the previous call was a 5 factor we want to call 5 in this call
-//      This accounts for duplicate calculations ie 1*2*3 holds the same result as 1*3*2. 
+//      This accounts for duplicate calculations i.e. 1*2*3 holds the same result as 1*3*2. 
 //      In this case we would ignore the 1*3*2 calculation since it is already in the list.
-//
 // Input: 
 //      value: the last value
 //      maxValue: the max value to end at supplied by the caller
 //      lastLevel: the last factor that the recursive call was called with
-// Returns: the sorted,non-duplicate list of factors
+// Returns: 
+//      the sorted,non-duplicate list of factors
 list<ULL> Factor::CreateFactorsRecursive(ULL value, ULL maxValue, int lastLevel)
 {
     list<ULL> factorList;
@@ -77,7 +77,7 @@ list<ULL> Factor::CreateFactorsRecursive(ULL value, ULL maxValue, int lastLevel)
         m_threadMutex.unlock();
     }
 
-    // Merge seperate calls into a master list
+    // Merge separate calls into a master list
     factorList.merge(twoList);
     factorList.merge(threeList);
     factorList.merge(fiveList);
@@ -87,7 +87,7 @@ list<ULL> Factor::CreateFactorsRecursive(ULL value, ULL maxValue, int lastLevel)
 }
 
 // Determines if this call should be async or not and returns either a list or a future respectively
-void Factor::CreateFactorsRecursiveCall(ULL value, ULL currentLevel, ULL maxValue, list<ULL> *factorList, future<list<ULL>> *futureFactorList)
+void Factor::CreateFactorsRecursiveCall(ULL value, int currentLevel, ULL maxValue, list<ULL> *factorList, future<list<ULL>> *futureFactorList)
 {
     m_threadMutex.lock();
     if (m_runningThreadCount < MAX_RUNNING_THREADS)
